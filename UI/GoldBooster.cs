@@ -25,7 +25,7 @@ public class GoldBooster : MonoBehaviour
     }
     public void AddEnergyLVL()
     {
-        allGold = PlayerPrefs.GetInt(AllGoldKey, 1000);
+        allGold = PlayerPrefs.GetInt(AllGoldKey, 0);
         allGold += 2500;
         OnCollected?.Invoke();  // Уведомляем об изменении золота (событие)
 
@@ -34,7 +34,7 @@ public class GoldBooster : MonoBehaviour
         PlayerPrefs.Save(); // Сохраняем изменения
 
         UpdateUI();
-        Debug.Log("Я увеличил уровень ЗОЛОТО за рекламу, всего золота " + PlayerPrefs.GetInt(AllGoldKey, 1000));
+        Debug.Log("Я увеличил уровень ЗОЛОТО за рекламу, всего золота " + PlayerPrefs.GetInt(AllGoldKey, 0));
     }
     private void OnDisable()
     {
@@ -42,12 +42,12 @@ public class GoldBooster : MonoBehaviour
     }
     private void Awake()
     {
-        allGold = PlayerPrefs.GetInt(AllGoldKey, 1000);
+        allGold = PlayerPrefs.GetInt(AllGoldKey, 0);
         UpdateUI();
     }
     private void UpdateUI()
     {
-        allGold = PlayerPrefs.GetInt(AllGoldKey, 1000);  // Перезагружаем актуальное значение золота
+        allGold = PlayerPrefs.GetInt(AllGoldKey, 0);  // Перезагружаем актуальное значение золота
         goldText.text = allGold.ToString();
         int upgradeLevel = PlayerPrefs.GetInt(UpgradeLevelKey, 1);  // Уровень апгрейда начинается с 1
         // Рассчитываем стоимость апгрейда в зависимости от уровня

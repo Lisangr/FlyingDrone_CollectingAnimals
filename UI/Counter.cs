@@ -6,9 +6,22 @@ public class Counter : MonoBehaviour
     [SerializeField] private Text counterText;
     [SerializeField] private int animalsQuantity;
     [SerializeField] private GameObject winscreen;
+    private int currentIndex;
+
+    private void Awake()
+    {
+        if (PlayerPrefs.HasKey("Level"))
+        {
+            currentIndex = PlayerPrefs.GetInt("Level");
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Level", 22);
+            PlayerPrefs.Save();
+        }
+    }
     private void Start()
     {
-
         counterText = GetComponent<Text>();
 
         if (winscreen != null)
@@ -29,10 +42,24 @@ public class Counter : MonoBehaviour
         animalsQuantity -= 1;
         counterText.text = animalsQuantity.ToString();
 
-        if (animalsQuantity <= 0) //тут меняем значение для теста
+        if (animalsQuantity <= 123) //тут меняем значение для теста
         {
             Debug.Log("All animals collected, displaying winscreen.");
             winscreen.SetActive(true);
+
+            currentIndex++;
+            Debug.Log("Текущий уровень" + currentIndex);
+            if (currentIndex == 25)
+            {
+                currentIndex = Random.Range(2, 25);
+                PlayerPrefs.SetInt("Level", currentIndex);
+                PlayerPrefs.Save();
+            }
+            else
+            {
+                PlayerPrefs.SetInt("Level", currentIndex);
+                PlayerPrefs.Save();
+            }
         }
     }
 

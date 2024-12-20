@@ -24,7 +24,7 @@ public class EnergyUpper : MonoBehaviour
 
     public void GoldBooster_OnCollected()
     {
-        allGold = PlayerPrefs.GetInt(AllGoldKey, 1000);  // Обновляем значение золота
+        allGold = PlayerPrefs.GetInt(AllGoldKey, 0);  // Обновляем значение золота
         UpdateUI();  // Обновляем UI, теперь картинка рекламы исчезнет, если золота достаточно
     }
 
@@ -57,7 +57,7 @@ public class EnergyUpper : MonoBehaviour
         EnergyADImage.gameObject.SetActive(false);
 
         // Загружаем значения золота и уровня апгрейда из PlayerPrefs
-        allGold = PlayerPrefs.GetInt(AllGoldKey, 1000);
+        allGold = PlayerPrefs.GetInt(AllGoldKey, 0);
         upgradeLevel = PlayerPrefs.GetInt(UpgradeLevelKey, 1);  // Уровень апгрейда начинается с 1
     }
 
@@ -70,7 +70,7 @@ public class EnergyUpper : MonoBehaviour
     // Метод для обновления UI
     private void UpdateUI()
     {
-        allGold = PlayerPrefs.GetInt(AllGoldKey, 1000);  // Перезагружаем актуальное значение золота
+        allGold = PlayerPrefs.GetInt(AllGoldKey, 0);  // Перезагружаем актуальное значение золота
         goldText.text = allGold.ToString();
 
         // Рассчитываем стоимость апгрейда в зависимости от уровня
@@ -96,7 +96,7 @@ public class EnergyUpper : MonoBehaviour
     // Метод для обработки нажатия на кнопку апгрейда
     public void OnUpgradeButtonPressed()
     {
-        allGold = PlayerPrefs.GetInt(AllGoldKey, 1000);  // Перезагружаем актуальное значение золота
+        allGold = PlayerPrefs.GetInt(AllGoldKey, 0);  // Перезагружаем актуальное значение золота
         int upgradeCost = upgradeLevel * 100;
 
         // Проверяем, достаточно ли золота для списания
