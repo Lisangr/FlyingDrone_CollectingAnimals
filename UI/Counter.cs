@@ -16,7 +16,7 @@ public class Counter : MonoBehaviour
         }
         else
         {
-            PlayerPrefs.SetInt("Level", 22);
+            PlayerPrefs.SetInt("Level", 1);
             PlayerPrefs.Save();
         }
     }
@@ -42,7 +42,7 @@ public class Counter : MonoBehaviour
         animalsQuantity -= 1;
         counterText.text = animalsQuantity.ToString();
 
-        if (animalsQuantity <= 123) //тут меняем значение для теста
+        if (animalsQuantity <= 0) //тут меняем значение для теста
         {
             Debug.Log("All animals collected, displaying winscreen.");
             winscreen.SetActive(true);

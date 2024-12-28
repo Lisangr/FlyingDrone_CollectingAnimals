@@ -9,10 +9,28 @@ public class ArrowMoving : MonoBehaviour
     private Vector3 targetPosition; // Позиция цели
     private bool hasTarget = false; // Флаг для проверки цели
 
+    private Rigidbody rb;
+
+    private void Awake()
+    {
+        // Если используется Rigidbody для управления движением
+        rb = GetComponent<Rigidbody>();
+    }
+
     private void OnEnable()
     {
         // Таймер для возврата стрелы в пул
         Invoke(nameof(ReturnToPool), lifetime);
+
+        // Сброс начальных параметров
+        speed = 10f;
+        hasTarget = false;
+
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero; // Обнуляем скорость
+            rb.angularVelocity = Vector3.zero; // Обнуляем угловую скорость
+        }
     }
 
     private void Update()
@@ -37,12 +55,23 @@ public class ArrowMoving : MonoBehaviour
 
     private void ReturnToPool()
     {
+        // Возвращаем стрелу в пул и сбрасываем состояние
         ArrowsPool.Instance.ReturnArrow(this);
     }
 
     private void OnDisable()
     {
+        // Очищаем состояния при отключении
         CancelInvoke();
+
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero; // Обнуляем скорость
+            rb.angularVelocity = Vector3.zero; // Обнуляем угловую скорость
+        }
+
+        hasTarget = false;
+        speed = 10f; // Сброс начальной скорости
     }
 
     private void OnTriggerEnter(Collider other)
@@ -52,6 +81,7 @@ public class ArrowMoving : MonoBehaviour
             DestroyBullet();
         }
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
@@ -59,8 +89,9 @@ public class ArrowMoving : MonoBehaviour
             DestroyBullet();
         }
     }
+
     private void DestroyBullet()
     {
-        Destroy(this.gameObject);
+        ArrowsPool.Instance.ReturnArrow(this); // Вместо Destroy возвращаем в пул
     }
 }

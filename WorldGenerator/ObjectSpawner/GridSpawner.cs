@@ -79,7 +79,6 @@ public class GridSpawner : MonoBehaviour
                     // Проверяем, что луч не пересекает другие слои, указанные в ignoreLayers
                     if (((1 << hit.collider.gameObject.layer) & ignoreLayers) != 0)
                     {
-                        // Если пересекает, пропускаем этот тайл
                         continue;
                     }
 
@@ -118,15 +117,22 @@ public class GridSpawner : MonoBehaviour
                 // Выбираем случайный префаб
                 GameObject prefabToSpawn = prefabArray[Random.Range(0, prefabArray.Length)];
 
-                // Спавним объект и устанавливаем его родителем
-                GameObject spawnedObject = Instantiate(prefabToSpawn, adjustedPosition, Quaternion.identity);
-                spawnedObject.transform.SetParent(parentObject); // Устанавливаем родительский объект для управления
+#if UNITY_EDITOR
+            // Инстанцируем префаб в сцене и устанавливаем его родителем
+            GameObject spawnedObject = PrefabUtility.InstantiatePrefab(prefabToSpawn, parentObject) as GameObject;
+            if (spawnedObject != null)
+            {
+                spawnedObject.transform.position = adjustedPosition;
+                spawnedObject.transform.rotation = Quaternion.identity;
+            }
+#endif
 
                 // Увеличиваем счётчик заспавненных объектов
                 spawnedObjectsCount++;
             }
         }
     }
+
 
     // Рисуем сетку для визуализации в редакторе
     private void OnDrawGizmosSelected()
@@ -172,7 +178,16 @@ public class GridSpawner : MonoBehaviour
 
 
 
+
+
+
+
+
+
+
+
 /*using UnityEngine;
+using UnityEditor;
 using System.Collections.Generic;
 
 public class GridSpawner : MonoBehaviour
@@ -198,6 +213,9 @@ public class GridSpawner : MonoBehaviour
     // Укажите слой для Ground объектов
     public LayerMask groundLayer;
 
+    // Добавляем маску для игнорирования других слоев, например, Default
+    public LayerMask ignoreLayers;
+
     private List<Vector3> validSpawnPositions = new List<Vector3>(); // Список позиций, куда можно заспавнить объекты
     private int spawnedObjectsCount = 0; // Счётчик заспавненных объектов
     private Transform parentObject; // Родительский объект для хранения заспавленных префабов
@@ -217,7 +235,7 @@ public class GridSpawner : MonoBehaviour
 
         validSpawnPositions.Clear(); // Очищаем список валидных позиций перед новым запуском
 
-        // Создаем родительский объект для хранения заспавленных объектов
+        // Создаем родительский объект для хранения заспавненных объектов
         if (parentObject == null)
         {
             parentObject = new GameObject("SpawnedObjects").transform;
@@ -246,6 +264,13 @@ public class GridSpawner : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(spawnCheckPosition, Vector3.down, out hit, Mathf.Infinity, groundLayer))
                 {
+                    // Проверяем, что луч не пересекает другие слои, указанные в ignoreLayers
+                    if (((1 << hit.collider.gameObject.layer) & ignoreLayers) != 0)
+                    {
+                        // Если пересекает, пропускаем этот тайл
+                        continue;
+                    }
+
                     // Если луч пересекает землю, сохраняем точку в список
                     validSpawnPositions.Add(hit.point);
                     Debug.Log($"Луч пересёк объект на высоте Y: {hit.point.y} в позиции {hit.point}");

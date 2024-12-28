@@ -11,6 +11,22 @@ public class Volume : MonoBehaviour
 
     void Start()
     {
+        // Если объекты не привязаны через инспектор, ищем их в иерархии, включая неактивные
+        if (m_SoundToggle == null)
+        {
+            GameObject toggleObject = FindInActiveObjectByName("VolumeToggle");
+            if (toggleObject != null)
+                m_SoundToggle = toggleObject.GetComponent<Toggle>();
+        }
+
+        if (m_VolumeSlider == null)
+        {
+            GameObject sliderObject = FindInActiveObjectByName("VolumeSlider");
+            if (sliderObject != null)
+                m_VolumeSlider = sliderObject.GetComponent<Slider>();
+        }
+
+        // Получаем компонент AudioSource
         m_AudioSource = GetComponent<AudioSource>();
 
         // Загружаем громкость и состояние звука из PlayerPrefs
@@ -65,5 +81,17 @@ public class Volume : MonoBehaviour
         {
             m_AudioSource.volume = m_Volume;  // Если звук включен, применяем сохраненную громкость
         }
+    }
+
+    // Рекурсивный метод для поиска объекта по имени, включая неактивные
+    private GameObject FindInActiveObjectByName(string name)
+    {
+        Transform[] transforms = Resources.FindObjectsOfTypeAll<Transform>();
+        foreach (Transform t in transforms)
+        {
+            if (t.hideFlags == HideFlags.None && t.name == name)
+                return t.gameObject;
+        }
+        return null;
     }
 }

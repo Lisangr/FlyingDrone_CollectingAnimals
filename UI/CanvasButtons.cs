@@ -22,7 +22,7 @@ public class CanvasButtons : MonoBehaviour
         }
         else
         {
-            currentIndex = PlayerPrefs.GetInt("Level", 22);
+            currentIndex = PlayerPrefs.GetInt("Level", 1);
         }
     }
     private void Start()
@@ -73,7 +73,16 @@ public class CanvasButtons : MonoBehaviour
     }
     public void OnStartButtonClick()
     {
-        SceneManager.LoadScene(currentIndex, LoadSceneMode.Single);
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (currentSceneIndex == 0)
+        {
+            SceneManager.LoadScene(currentIndex, LoadSceneMode.Single);
+        }
+        else
+        {
+            YandexGame.FullscreenShow();
+            SceneManager.LoadScene(currentIndex, LoadSceneMode.Single);
+        }
     }
 
     private const string CurrentExperienceKey = "CurrentPlayerExperience";
@@ -101,7 +110,8 @@ public class CanvasButtons : MonoBehaviour
         PlayerPrefs.Save(); // Сохраняем изменения
         Debug.Log("СУММАРНО сохранено ЗОЛОТА " + PlayerPrefs.GetInt(AllGoldKey, 0) + " ОПЫТА " + PlayerPrefs.GetInt(AllExperienceKey, 0));
         
-        SceneManager.LoadScene(0, LoadSceneMode.Single);
+        YandexGame.FullscreenShow();
+        SceneManager.LoadScene(0);
     }
     public void OnPauseMenuClick()
     {
@@ -109,6 +119,7 @@ public class CanvasButtons : MonoBehaviour
     }
     public void RestartCurrentScene()
     {
+        YandexGame.FullscreenShow();
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex);
     }
