@@ -55,10 +55,10 @@ public class EnergyUpper : MonoBehaviour
     {
         // Изначально скрываем изображение рекламы
         EnergyADImage.gameObject.SetActive(false);
-
+        UpdateUI();
         // Загружаем значения золота и уровня апгрейда из PlayerPrefs
         allGold = PlayerPrefs.GetInt(AllGoldKey, 0);
-        upgradeLevel = PlayerPrefs.GetInt(UpgradeLevelKey, 1);  // Уровень апгрейда начинается с 1
+        upgradeLevel = PlayerPrefs.GetInt(UpgradeLevelKey, 1);  // Уровень апгрейда начинается с 1        
     }
 
     private void Start()
@@ -66,7 +66,42 @@ public class EnergyUpper : MonoBehaviour
         // Обновляем UI
         UpdateUI();
     }
+    private void UpdateUI()
+    {
+        allGold = PlayerPrefs.GetInt(AllGoldKey, 0);  // Перезагружаем актуальное значение золота
+        goldText.text = allGold.ToString();
 
+        // Рассчитываем стоимость апгрейда в зависимости от уровня
+        int upgradeCost = upgradeLevel * 100;
+        upgradeCostText.text = upgradeCost.ToString();
+        upgradeLVL.text = upgradeLevel.ToString();
+        Debug.Log("Текущий уровень АПГРЕЙДА ЭНЕРГИИ " + upgradeLevel);
+
+        // Проверяем, достаточно ли золота для апгрейда
+        if (allGold >= upgradeCost)
+        {
+            // Если достаточно золота, активируем кнопку
+            upgradeButton.interactable = true;
+            EnergyADImage.gameObject.SetActive(false);  // Скрываем изображение рекламы
+        }
+        else
+        {
+            // Если золота недостаточно, показываем рекламу
+            upgradeButton.interactable = false;
+
+            // Показываем изображение рекламы только если уровень меньше определённого значения
+            if (upgradeLevel < 2)  // Или любое другое логическое условие
+            {
+                EnergyADImage.gameObject.SetActive(false);
+            }
+            else
+            {
+                EnergyADImage.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    /*
     // Метод для обновления UI
     private void UpdateUI()
     {
@@ -86,13 +121,12 @@ public class EnergyUpper : MonoBehaviour
             upgradeButton.interactable = true;
         }
         else
-        {
-            // Если золота недостаточно, показываем рекламу
+        {            
             upgradeButton.interactable = false;
-            EnergyADImage.gameObject.SetActive(true);  // Показываем изображение рекламы
+            EnergyADImage.gameObject.SetActive(true);  // Показываем изображение рекламы            
         }
     }
-
+    */
     // Метод для обработки нажатия на кнопку апгрейда
     public void OnUpgradeButtonPressed()
     {

@@ -1,14 +1,16 @@
 using UnityEngine;
+using UnityEngine.UI;
 using YG;
 
 public class PlayerData : MonoBehaviour
-{   
+{
     private const string CurrentExperienceKey = "CurrentPlayerExperience";
     private const string CurrentGoldKey = "CurrentPlayerGold";
     private const string AllExperienceKey = "PlayerExperience";
     private const string AllGoldKey = "PlayerGold";
     private int AdID = 2; //дубль награды
-
+    public delegate void OnRewarded();
+    public static event OnRewarded OnRewardedDone;
     private void OnEnable()
     {
         CollectableItems.OnCollectedGold += CollectableItems_OnCollectedGold;
@@ -56,8 +58,8 @@ public class PlayerData : MonoBehaviour
         Debug.Log("Текущее количество ОПЫТА " + newExp + " текущее количество ЗОЛОТА " + newGold);
 
         PlayerPrefs.SetInt(AllGoldKey, newGold);
-        PlayerPrefs.SetInt(AllExperienceKey, newExp);       
-
+        PlayerPrefs.SetInt(AllExperienceKey, newExp);
+        OnRewardedDone?.Invoke();
         PlayerPrefs.DeleteKey(CurrentGoldKey);
         PlayerPrefs.DeleteKey(CurrentExperienceKey);
         PlayerPrefs.Save(); // Сохраняем изменения

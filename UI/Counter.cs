@@ -5,7 +5,7 @@ public class Counter : MonoBehaviour
 {
     [SerializeField] private Text counterText;
     [SerializeField] private int animalsQuantity;
-    [SerializeField] private GameObject winscreen;
+    private CanvasButtons canvasButtons;
     private int currentIndex;
 
     private void Awake()
@@ -22,12 +22,9 @@ public class Counter : MonoBehaviour
     }
     private void Start()
     {
+        canvasButtons = FindObjectOfType<CanvasButtons>();
         counterText = GetComponent<Text>();
 
-        if (winscreen != null)
-        {
-            winscreen.SetActive(false);
-        }
         animalsQuantity = FindObjectsOfType<CollectableItems>().Length;
         counterText.text = animalsQuantity.ToString();
 
@@ -44,9 +41,8 @@ public class Counter : MonoBehaviour
 
         if (animalsQuantity <= 0) //тут мен€ем значение дл€ теста
         {
-            Debug.Log("All animals collected, displaying winscreen.");
-            winscreen.SetActive(true);
-
+            canvasButtons.ShowWinPanel();
+            
             currentIndex++;
             Debug.Log("“екущий уровень" + currentIndex);
             if (currentIndex == 25)

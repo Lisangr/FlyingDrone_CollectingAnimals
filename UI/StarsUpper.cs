@@ -103,7 +103,17 @@ public class StarsUpper : MonoBehaviour
         else
         {
             upgradeButton.interactable = false;
-            StarsADImage.gameObject.SetActive(true);
+
+            if (upgradeLevel < 2)  // Или любое другое логическое условие
+            {
+                StarsADImage.gameObject.SetActive(false);
+            }
+            else
+            {
+                StarsADImage.gameObject.SetActive(true);
+            }
+
+            
         }
     }
     private void UpdateOptionObjects()

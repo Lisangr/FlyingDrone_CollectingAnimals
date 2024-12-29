@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using YG;
 
 public class CanvasButtons : MonoBehaviour
@@ -12,8 +13,32 @@ public class CanvasButtons : MonoBehaviour
     public GameObject winPanel;
     public GameObject attackButton;
     public GameObject[] rewardButtons;
-
+    public Text goldText;
+    public Text expText;
     private int currentIndex;
+    private const string CurrentExperienceKey = "CurrentPlayerExperience";
+    private const string CurrentGoldKey = "CurrentPlayerGold";
+    private const string AllExperienceKey = "PlayerExperience";
+    private const string AllGoldKey = "PlayerGold";
+    private int currentGold;
+    private int currentExp;
+    private void OnEnable()
+    {
+        PlayerData.OnRewardedDone += PlayerData_OnRewardedDone;
+    }
+
+    private void PlayerData_OnRewardedDone()
+    {
+        currentGold = PlayerPrefs.GetInt(CurrentGoldKey);
+        currentExp = PlayerPrefs.GetInt(CurrentExperienceKey);
+
+        goldText.text = currentGold.ToString();
+        expText.text = currentExp.ToString();
+    }
+    private void OnDisable()
+    {
+        PlayerData.OnRewardedDone -= PlayerData_OnRewardedDone;
+    }
     private void Awake()
     {
         if (PlayerPrefs.HasKey("Level"))
@@ -53,8 +78,21 @@ public class CanvasButtons : MonoBehaviour
     }
     public void ShowWinPanel()
     {
-        winPanel.SetActive(true);
+        currentGold = PlayerPrefs.GetInt(CurrentGoldKey);
+        currentExp = PlayerPrefs.GetInt(CurrentExperienceKey);
+
+        Debug.Log("ДЛЯ ВИН ПАНЕЛ Золото: " + currentGold + ", Опыт: " + currentExp);
+
+        // Проверяем, активен ли winPanel
+        if (winPanel != null)
+        {
+            winPanel.SetActive(true);
+        }
+
+        goldText.text = currentGold.ToString();       
+        expText.text = currentExp.ToString();       
     }
+
     public void ShowDefeatPanel()
     {
         defeatPanel.SetActive(true);
@@ -85,16 +123,9 @@ public class CanvasButtons : MonoBehaviour
         }
     }
 
-    private const string CurrentExperienceKey = "CurrentPlayerExperience";
-    private const string CurrentGoldKey = "CurrentPlayerGold";
-    private const string AllExperienceKey = "PlayerExperience";
-    private const string AllGoldKey = "PlayerGold";
-
     public void OnExitButtonClick()
     {      
-        // для сохранения данных глобально
-        int currentGold = PlayerPrefs.GetInt(CurrentGoldKey, 0);
-        int currentExp = PlayerPrefs.GetInt(CurrentExperienceKey, 0);
+        // для сохранения данных глобально        
         int allGold = PlayerPrefs.GetInt(AllGoldKey, 0);
         int allExp = PlayerPrefs.GetInt(AllExperienceKey, 0);
 
