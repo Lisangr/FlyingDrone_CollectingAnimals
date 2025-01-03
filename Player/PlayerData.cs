@@ -65,7 +65,7 @@ public class PlayerData : MonoBehaviour
         PlayerPrefs.Save(); // Сохраняем изменения
         Debug.Log("Я сохранил значения ЗОЛОТА " + PlayerPrefs.GetInt(AllGoldKey, 0) + " ОПЫТА " + PlayerPrefs.GetInt(AllExperienceKey, 0));
 
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
         YandexGame.RewardVideoEvent -= Rewarded;      
     }
     

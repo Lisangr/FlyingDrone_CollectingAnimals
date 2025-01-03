@@ -27,12 +27,13 @@ public class EnergyScript : MonoBehaviour
         if (id == AdID)
             AddEnergy();        
     }
-    
+
     private void AddEnergy()
     {
         currentEnergy = totalEnergy;
         losePanel.SetActive(false);
     }
+
     void Start()
     {        
         losePanel.SetActive(false);
@@ -65,6 +66,7 @@ public class EnergyScript : MonoBehaviour
 
     private void UpdateExpUI()
     {
-        energyImage.fillAmount = currentEnergy / totalEnergy;        
+        energyImage.fillAmount = currentEnergy / totalEnergy;
+        Time.timeScale = 1f;
     }
 }
